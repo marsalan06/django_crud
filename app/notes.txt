@@ -1,0 +1,254 @@
+django-admin startproject name
+
+1) rename krne k lye main folder k andar akay manage.py k upar wala 
+folder jis me settings.py and urls.py h usay rename
+than edit--> replace all --> old name , new name 
+--> replace all --> delete _pychache_ --> save all
+--> restart by 'python manage.py runserver'
+
+2) urls.py me admin panel access horha through the 
+import of django.contrib import admin 
+ussay urlspatterns list me update krdenge as show in the
+code 
+
+3) abi srf project bna h app ni , modularity function 
+k lye we create apps, python manage.py startapp pages
+
+A new folder created named pages, has views, models 
+admin , test and apps.py files
+
+    a) migrations for database, 
+    b)admin for linking project to app 
+    c) apps.py shows name of app that we created
+    d) models for database tables and fields 
+    e)test for automation testing
+    f) views for to genrate routes for the app static file
+    these routes are in urls.py of 'project'
+
+4) views.py ko use krne h for static file, pehla method
+    function views:
+    --> view h 'pages' ka tou pehle wahan jao
+    --> wahan create a particular function like flask without
+        decorator path , use HttpResponse module to bypass jinja
+    --> Now go to create the path because unlike flask decorators its
+        more modular, for this we go to 'urls.py' of main app
+
+        We imported views of pages and its function home and 
+        update the list urlspatterns
+
+    --> but hamne 'pages' ko 'app' se register ni kiya,
+        'app' k settings.py me installed app list me add krdenge
+        'pages'
+
+    --> run the server ab
+
+
+    Class based views:
+    --> request is only used for functions 
+    --> for class based , use django.views import View class in views of 
+    pages
+    -->ab class bnayen class name(View) pas krke
+        within class get, post, put ,delete k sep methods bneyge
+        than HttpResponse use hoga return me 
+    --> to add in urls.py the class method is ,
+        import it and use as name.as_view()
+
+    Another urlconf:
+    --> create urls.py in the 'pages' app
+    --> place the imports of django.urls path and 
+        from pages.view import name of function or classes
+    --> the 'pages' urls.py file will have the urlspatterns 
+        list same as project's urls.py 
+    --> but we wont have admin wala import in this
+
+    --> in urls.py of main project 
+        from django.urls import include, this will redirect as a blue print
+        to the pages's urls.py list 
+
+        in the main projects urlspatterns add the pages url as
+        path('pages/',include('pages.urls'))
+        this will redirect it 
+
+
+Dynamic Web urls:
+Pass data in url, we'll create views as functions 
+--> create view with a parameter , def team (request,id):
+--> where id is the parameter and display it using format function
+for path:
+--> goto urls.py of either the project 'app' or 
+    the 'pages' app and add the urls
+    we used for team: members/ and for indivual member
+    we used member/<id> for a fix data type use <int:id>
+    In multiple parameters use url as cat/<int:cat_id>/member/<int:id>
+    and similar in views as well 
+
+Using Query string:
+--> in views create a if check, the function arguments wont be placed, just use request
+    if (request.method == "GET" and "cat_id" in request.GET and "mem_id" in request.GET):
+    This will be a method check 
+    A url string uses key value pairs to provide parameters,
+    1) a '?' is used to seprate url path from query parameters
+    2) '&' is used to seprate between pairs of key value
+    3) '=' is used to seprate a key from its value 
+    so 'http://www.nytimes.com/section/nyregion?name=ali&age=25
+    becomes a query after the nyregion , has key value pairs of 
+    name = ali and age=25
+
+
+Using template views:
+in settings.py of main app , their is list of TEMPLATES, 
+--> for custom templates create a folder in root named templates 
+--> create an index.html in that folder
+--> goto the views.py of either page or app and add the view by render class
+    you can have data sent as a dictionary by the render class
+
+--> in the settings.py templates list dirs list add the template folder if in root
+    and if in app folder use 'app/templates' this registers the template folder 
+    
+
+-->for bootstrapping it, create a base html temp and extend it to all
+-->created a layout.html with place holders 
+--> extended in the index.html 
+--> get bootstrapping links and place in the main layout 
+
+Dynamic data for template
+--> use the {} in the views as {key:value} , and layout use
+--> and in the layout.html <title> {{key}} </title>
+--> and in the actual page remove the {% block page_title %} tag completely
+
+Static Resources:
+--> settings.py --> installed app list --> make sure to have 
+    'django.contrib.staticfiles' should be present 
+--> go down in settings.py , make sure 'static_url' variable 
+    is present, add STATICFILES_DIRS = ['static'] above it, if static folder
+    in root
+--> created images, css and js folder in static
+--> created style.css in the folder
+--> go to main layout.html and add the style.css by the link tag with href in jinja
+    , in href={%static 'css/style.css'%}
+--> add {% load static %} or {% load staticfiles %} in the layout.html on top to enable static is 
+    href keyword
+
+For images:
+--> place image in the images folder, go to the concern html page ,
+--> use {%load static%} < img src= "{% static 'images/test.jpg%'}" alt="image is here"> 
+--> if you add in layout.html this becomes globally available
+ 
+
+Create Forms:
+-->create a template contacts.html and well use forms in it
+--> bootstrap se form uthalen 
+--> place in content block 
+--> we add method='POST' and action='/pages/contact_form/'
+--> go back to views.py and create if case for post or get 
+--> we use the "name_given" from <input name="name_given"> to get
+    the concern input
+--> in the settings.py of App we have MIDDLEWARE list,
+    this is for securities and for forms we have
+    'django.middleware.csrf.CsrfViewMiddleware' which is
+    for forms security , to envoke it just add
+    {% csrf_token%} inside the form code. to confirm inspect the constantly
+    changing key 
+
+--> in the views.py we'll use variable to save the data and return them as  
+    key:value pairs
+
+--> To display the value use format Email:{{email | default:'default string'}}
+    in the return render html , no space after 'default:'
+    and <p> tag to change line 
+
+
+
+
+Using Database: 
+--> When we execute python manage.py runserver we get multiple arguments 
+    one of which is unapplied migrations
+--> python manage.py migrate is used to apply necessary changes in Resources like data feilds,
+    columns, models and others 
+--> all server side development require migrations
+
+--> App folder--> setting.py --> databases
+    natively its sqlite3 but we use mysql
+--> first use shell of mysql
+    1) \sql --> \connect root@localhost:3306
+    2) show databases;
+    3) create database django_db;
+    4) pip install mysqlclient
+    5) in settings.py 
+        DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'mydb',
+        'USER': 'root',
+        'PASSWORD': '<YOUR_DB_PASSWORD>',
+        'HOST': 'localhost',   
+        'PORT': '3306',
+    }    
+    6) python3 manage.py migrate
+    7) in shell , use django_db; 
+    8) show tables; --> shows all migrations as tables in django_db
+
+--> now we'll use admin panel by \admin
+--> we'll create a super user by python manage.py createsuperuser
+    created super user as arsalan and 06----97
+-->to check run command select * from auth_user;
+    will show all concern data of user
+--> go to /admin and get into the superuser mode in browser
+--> user is for users authirizations and edit your data in it 
+--> verify by select * from auth_user;
+
+
+
+MOdels in django
+-->  The data we are taking from the form
+--> we will now save as models on the mysql database 
+    django_db
+--> we'll use models.py in pages 
+--> in it we'll use OOP to create a custom model child class using models.Model as parent class
+--> go to django documentation , to see datatypes ,
+    we'll use char feild and email feild, max length argument is max limit
+--> after creating model field , run python manage.py makemigrations 
+--> a migrations folder is made automatically in the pages folder 
+
+    --> if you create a model feild after 1st 0001 migration 
+    and makemigrations to it, you'll get an error of collash , 
+    ----
+    q k chahe khali hi q na ho row k banay me 2 
+    instance hogye hain tou database ko lagay 
+    ga k upar jo data is new feild ka ni h uska 
+    kya ?
+    ----
+    to solve this each new field should have null=True argument to it
+    and than python manage.py makemigrations
+    
+    Lastly python manage.py migrate, creates a table 
+    in django_db as pages_contact_model with data in it 
+
+
+--> to store this data in database, in views.py
+    from pages.models import Contact_Model 
+
+--> to avoid the import error place ' objects=models.manager' in the
+    models.py file 
+
+--> create a table in contact.html to display data in 
+    tabular form
+--> than in the views.py, from pages.models import contact_model,
+    create the post scenerio for saving data in
+    mysql
+
+--> use data.save(), and get data in a variable by objects.all()
+    and pass it as a kwrg
+
+--> remaining crud operation of delete and update, 
+    1) templates--> contact.html-->
+    2) use a new header and data will be as link 
+        we create a 'action' header with data 
+        Edit and delete
+    3) we'll use href argument to create a link to a query string
+        on edit and delete <a href> tag will be added
+
+    4) now in views we'll create a if case with 
+         request.GET.get('method')=='edit'
+    
+

@@ -1,0 +1,77 @@
+{% extends 'layout.html'%}
+
+
+{% block content%}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="POST" action="/pages/contact_form/">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        {% csrf_token %} 
+                    </div>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Email address</label>
+                  <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputName" class="form-label">Name</label>
+                    <input name="name" type="name" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
+                  </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Password</label>
+                  <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button name="button" type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              <!-- <div class="row d-block">
+                  <p>Email:{{email | default:'No Email'}} </p>
+                  <p>Password: {{password| default:'No Password'}}</p>
+                  <p>Name : {{name | default:'No Name'}} </p>
+                </div> -->
+                <table class="table table-responsive">
+                  <thead>
+                    <tr>
+                      <th>
+                        Name
+                      </th>
+                      <th>
+                        Email
+                      </th>
+                      <th>
+                        Password
+                      </th>
+                      <th colspan="2">
+                        Actions 
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {%for row in rows%}
+                    <tr>
+                      <td>
+                        {{row.name}}
+                      </td>
+                      <td>
+                        {{row.email}}
+                      </td>
+                      <td>
+                        {{row.password}}
+                      </td>
+                      <td><a href="/pages/contact_form?method=edit&id={{row.id}}">
+                        Edit
+                      </td>
+                      <td><a href="/pages/contact_form?method=delete&id={{row.id}}">
+                        Delete
+                      </td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+              </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'layout.html'%}
+
+
+{% block content%}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="POST" action="/pages/contact_form/?method=edit&id={{row.id}}">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        {% csrf_token %} 
+                    </div>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Email address</label>
+                  <input name="email" type="email" placeholder="Email" value="{{row.email}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputName" class="form-label">Name</label>
+                    <input name="name" type="name" class="form-control" placeholder="Name" value="{{row.name}}" id="exampleInputName" aria-describedby="nameHelp">
+                  </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Password</label>
+                  <input name="password" placeholder="Password" value="{{row.password}}" type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button name="button" type="submit" class="btn btn-primary">Edit Now</button>
+              </form>
+              <!-- <div class="row d-block">
+                  <p>Email:{{email | default:'No Email'}} </p>
+                  <p>Password: {{password| default:'No Password'}}</p>
+                  <p>Name : {{name | default:'No Name'}} </p>
+                </div> -->
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
